@@ -49,7 +49,7 @@ Seguro.prototype.cotizarSeguro = function (){
 function Interfaz(){}
 
 //Mensaje q se imprime en el HTML
-Interfaz.prototype.mostrarError = function(mensaje, tipo){
+Interfaz.prototype.mostrarMensaje = function(mensaje, tipo){
     const div = document.createElement('div');
 
     if(tipo === 'error') {
@@ -83,13 +83,18 @@ Interfaz.prototype.mostrarResultado = function(seguro, total) {
     // crear div
     const div = document.createElement('div');
     div.innerHTML = `
-    tu Resumen:
-        <p>Marca: ${marca}</p>
+    <p class='header'>tu Resumen:</p>
+        <p >Marca: ${marca}</p>
         <p>Año: ${seguro.anio}</p>
         <p>tipo: ${seguro.tipo}</p>
         <p>Total: ${total}</p>
     `;
-    resultado.appendChild(div)
+    const spinner = document.querySelector('#cargando img');
+    spinner.style.display = 'block';
+    setTimeout(function(){
+        spinner.style.display = 'none';
+        resultado.appendChild(div);
+    }, 3000)
     //
 }
 
@@ -123,6 +128,14 @@ console.log(formulario)
             
             //console.log('faltan datos');
         }else{
+
+            //Limpiar resultados anteriores
+            const resultados = document.querySelector('#resultado div')
+            if(resultados != null){
+                resultados.remove();
+            }
+
+
             //Instanciar seguro y mostrar interfaz
                 const seguro = new Seguro(marcaSeleccionada, anioSeleccionado, tipo);
             //console.log('Todo correcto')
@@ -130,6 +143,7 @@ console.log(formulario)
             const cantidad = seguro.cotizarSeguro();
 
             interfaz.mostrarResultado(seguro, cantidad);
+            interfaz.mostrarMensaje('Cotizando...', 'exito');
         }
 
 
